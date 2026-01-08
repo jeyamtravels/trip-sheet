@@ -105,7 +105,7 @@ canvas{
 <!-- HEADER -->
 <table>
 <tr>
-  <td class="w-medium"><label>ServiceCity</label><input id="serviceCity" id="></td>
+  <td class="w-medium"><label>ServiceCity</label><input id="serviceCity"></td>
   <td class="w-large"><label>Organisation</label><input id="organisation"></td>
   <td><label>Guest Name</label><input id="guestName"></td>
 </tr>
@@ -189,27 +189,7 @@ Print Trip Sheet
 </div>
 
 <script>
-  /* READ DATA FROM GOOGLE SHEET LINK */
-const params = new URLSearchParams(window.location.search);
-
-function fill(id, param){
-  const el = document.getElementById(id);
-  if(el && params.get(param)){
-    el.value = decodeURIComponent(params.get(param));
-  }
-}
-
-fill("serviceCity", "city");
-fill("organisation", "org");
-fill("guestName", "guest");
-fill("dsNo", "ds");
-fill("bookingId", "booking");
-fill("reportingAddress", "address");
-fill("startDate", "sdate");
-fill("startTime", "stime");
-fill("startKm", "skm");
-
-    const WEB_APP_URL ="https://script.google.com/macros/s/AKfycbwdIhp7WLm7f588TZU5uzIwUH7qvllCU7C0fWevLWCnWA54usMgS-QRaBObwPKd42yJ/exec";
+    const WEB_APP_URL ="https://script.google.com/macros/s/AKfycbzNvSvEFb68CCE9g-XwEP-BmthweE1NKOdoaRDoYVK-Jm-dwR1MRWSTJ6Ey_16_pRQ/exec";
 function calcKm(){
   let s=Number(startKm.value)||0;
   let e=Number(closeKm.value)||0;
