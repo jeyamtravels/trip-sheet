@@ -1,157 +1,312 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Trip Sheet</title>
-  <style>
-    body{font-family:Arial,sans-serif;background:#f5f5f5;padding:20px}
-    .sheet{max-width:900px;margin:auto;background:#fff;border:2px solid #333;padding:20px}
-    h2{text-align:center;letter-spacing:2px}
-    table{width:100%;border-collapse:collapse;font-size:14px}
-    td,th{border:1px solid #333;padding:8px;vertical-align:top}
-    label{font-weight:bold;display:block;margin-bottom:4px}
-    input,textarea{width:100%;border:none;outline:none;font-size:14px}
-    textarea{resize:none}
-    .small{font-size:12px}
-    .signature{height:60px}
-    .actions{margin-top:20px;display:flex;gap:10px}
-    button{flex:1;padding:10px;font-size:15px;border:none;border-radius:6px;cursor:pointer}
-    .submit{background:#1a73e8;color:#fff}
-    .print{background:#1d6f42;color:#fff}
-  </style>
+<meta charset="UTF-8">
+<title>Trip Sheet</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  font-family: Arial, sans-serif;
+  background:#f2f2f2;
+  padding:5px;
+}
+
+.sheet{
+  max-width:900px;
+  margin:auto;
+  background:#fff;
+  border:2px solid #000;
+  padding:6px;
+}
+
+h2{
+  text-align:center;
+  letter-spacing:1px;
+  margin:2px 0 6px;
+  font-size:16px;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:12px;
+}
+
+td{
+  border:1px solid #000;
+  padding:3px;
+  vertical-align:top;
+}
+
+label{
+  font-weight:bold;
+  font-size:11px;
+  display:block;
+  margin-bottom:1px;
+}
+
+input, textarea{
+  width:100%;
+  border:none;
+  outline:none;
+  font-size:12px;
+  padding:1px 0;
+}
+
+textarea{
+  resize:none;
+  line-height:1.2;
+}
+
+
+/* fixed widths */
+.w-small{width:120px;}
+.w-medium{width:160px;}
+.w-large{width:260px;}
+
+/* signature */
+canvas{
+  border:1px solid #000;
+  width:100%;
+  height:55px;   /* was 80px */
+  touch-action:none;
+}
+
+
+.clear{
+  font-size:11px;
+  color:blue;
+  cursor:pointer;
+  margin-top:3px;
+}
+
+/* print */
+@media print{
+    @page{
+        margin:6mm;
+    }
+    body{margin:0};
+  body{background:#fff;}
+  button{display:none;}
+  h2{font-size:14px;margin:2px 0;}
+  td{padding:2px;}
+  canvas{height:45px;}
+}
+
+</style>
 </head>
+
 <body>
 
-<div class="sheet" id="tripSheet">
-  <h2>TRIP SHEET</h2>
+<div class="sheet">
+<h2>TRIP SHEET</h2>
 
-  <table>
-    <tr>
-      <td><label>Service City</label><input id="serviceCity"></td>
-      <td><label>Organisation</label><input id="organisation"></td>
-      <td><label>Customer</label><input id="customer"></td>
-    </tr>
-    <tr>
-      <td><label>DS No.</label><input id="dsno"></td>
-      <td colspan="2"><label>Reporting Address</label><input id="reportAddress"></td>
-    </tr>
-  </table>
+<!-- HEADER -->
+<table>
+<tr>
+  <td class="w-medium"><label>ServiceCity</label><input id="serviceCity"></td>
+  <td class="w-large"><label>Organisation</label><input id="organisation"></td>
+  <td><label>Guest Name</label><input id="guestName"></td>
+</tr>
+<tr>
+  <td class="w-small"><label>DS No</label><input id="dsNo"></td>
+  <td class="w-small"><label>Booking ID</label><input id="bookingId"></td>
+  <td><label>Reporting Address</label><input id="reportingAddress"></td>
+</tr>
+</table>
 
-  <br>
+<!-- START / CLOSE -->
+<table>
+<tr>
+  <td class="w-small"><label>Starting Date</label><input type="date" id="startDate"></td>
+  <td class="w-small"><label>Starting Time</label><input type="time" id="startTime" oninput="calcHrs()"></td>
+  <td class="w-small"><label>Starting KM</label><input type="number" id="startKm" oninput="calcKm()"></td>
+</tr>
+<tr>
+  <td class="w-small"><label>Closing Date</label><input type="date"></td>
+  <td class="w-small"><label>Closing Time</label><input type="time" id="closeTime" oninput="calcHrs()"></td>
+  <td class="w-small"><label>Closing KM</label><input type="number" id="closeKm" oninput="calcKm()"></td>
+</tr>
+</table>
 
-  <table>
-    <tr>
-      <td><label>Starting Date</label><input type="date" id="startDate"></td>
-      <td><label>Starting Time</label><input type="time" id="startTime" oninput="calcHrs()"></td>
-      <td><label>Starting KM</label><input type="number" id="startKm" oninput="calcKm()"></td>
-    </tr>
-    <tr>
-      <td><label>Closing Date</label><input type="date" id="closeDate"></td>
-      <td><label>Closing Time</label><input type="time" id="closeTime" oninput="calcHrs()"></td>
-      <td><label>Closing KM</label><input type="number" id="closeKm" oninput="calcKm()"></td>
-    </tr>
-  </table>
+<!-- VEHICLE -->
+<table>
+<tr>
+  <td><label>Reporting Time</label><input type="time" id="reportingAddress"></td>
+  <td><label>Car Booked</label><input id="carBooked"></td>
+  <td><label>Car Allotted</label><input id="carAllotted"></td>
+</tr>
+<tr>
+  <td><label>Chauffeur Name</label><input id="chauffeurName"></td>
+  <td><label>Mobile No</label><input id="mobileNo"></td>
+  <td><label>Car No</label><input id="carNo"></td>
+</tr>
+</table>
 
-  <br>
+<!-- TOTAL -->
+<table>
+<tr>
+  <td><label>Total Days</label><input></td>
+  <td><label>Total Hrs</label><input id="totalHrs" readonly></td>
+  <td><label>Total KM</label><input id="totalKm" readonly></td>
+</tr>
+</table>
 
-  <table>
-    <tr>
-      <td><label>Reporting Time</label><input type="time" id="reportTime"></td>
-      <td><label>Car Booked</label><input id="carBooked"></td>
-      <td><label>Car Allotted</label><input id="carAllotted"></td>
-    </tr>
-    <tr>
-      <td><label>Chauffeur</label><input id="driver"></td>
-      <td><label>Mobile No</label><input id="driverMobile"></td>
-      <td><label>Car No</label><input id="carNo"></td>
-    </tr>
-  </table>
+<!-- ROUTE -->
+<table>
+<tr>
+  <td><label>Routing Details</label><textarea rows="3"></textarea></td>
+  <td><label>Parking & Toll / Interstate Taxes</label><textarea rows="3"></textarea></td>
+</tr>
+</table>
 
-  <br>
+<!-- SIGNATURES -->
+<table>
+<tr>
+  <td width="50%">
+    <label>Guest Signature </label>
+    <canvas id="guestSign"></canvas>
+    <div class="clear" onclick="clearCanvas('guestSign')">Clear Signature</div>
+  </td>
 
-  <table>
-    <tr>
-      <td><label>Total Days</label><input id="totalDays"></td>
-      <td><label>Total Hrs</label><input id="totalHrs" readonly></td>
-      <td><label>Total KM</label><input id="totalKm" readonly></td>
-    </tr>
-  </table>
+  <td width="50%">
+    <label>Chauffeur Signature </label>
+   <canvas id="driverSign"></canvas>
+    <div class="clear" onclick="clearCanvas('driverSign')">Clear Signature</div>
+  </td>
+</tr>
+</table>
 
-  <br>
+<p style="font-size:11px;margin-top:5px">
+I confirm that I am responsible for full payment of this bill if not paid by the organisation.
+</p>
+<button onclick="saveTrip()">Save Trip Sheet</button>
+<button onclick="window.print()" style="width:100%;padding:5px;margin-top:6px">
+Print Trip Sheet
+</button>
 
-  <table>
-    <tr>
-      <td style="width:50%"><label>Routing Details</label><textarea rows="4" id="route"></textarea></td>
-      <td style="width:50%"><label>Parking & Toll / Interstate Taxes</label><textarea rows="4" id="toll"></textarea></td>
-    </tr>
-  </table>
-
-  <br>
-
-  <table>
-    <tr>
-      <td class="small">Conditions as mentioned overleaf</td>
-      <td class="small">I confirm that I am responsible for full payment of this bill if not paid by the organisation.</td>
-    </tr>
-    <tr>
-      <td><label>Customer Signature</label><div class="signature"></div></td>
-      <td><label>Closing Signature</label><div class="signature"></div></td>
-    </tr>
-  </table>
-
-  <div class="actions">
-    <button class="submit" onclick="submitForm()">Submit</button>
-    <button class="print" onclick="printSheet()">Print</button>
-  </div>
 </div>
 
 <script>
+    const WEB_APP_URL ="https://script.google.com/macros/s/AKfycbzNvSvEFb68CCE9g-XwEP-BmthweE1NKOdoaRDoYVK-Jm-dwR1MRWSTJ6Ey_16_pRQ/exec";
 function calcKm(){
-  const s = Number(startKm.value) || 0;
-  const e = Number(closeKm.value) || 0;
-  totalKm.value = e >= s ? e - s : 0;
+  let s=Number(startKm.value)||0;
+  let e=Number(closeKm.value)||0;
+  totalKm.value=e>=s?e-s:0;
 }
 
 function calcHrs(){
-  const st = startTime.value;
-  const et = closeTime.value;
-  if(!st || !et) return;
+  if(!startTime.value||!closeTime.value) return;
+  let [sh,sm]=startTime.value.split(':').map(Number);
+  let [eh,em]=closeTime.value.split(':').map(Number);
+  let start=sh*60+sm,end=eh*60+em;
+  if(end<start) end+=1440;
+  let diff=end-start;
+  totalHrs.value=Math.floor(diff/60)+"h "+(diff%60)+"m";
+}
+function val(id){
+  return document.getElementById(id)?.value || "";
+}
+function saveTrip(){
+  const data = {
+   serviceCity: val("serviceCity"),
+    organisation: val("organisation"),
+    guestName: val("guestName"),
+    dsNo: val("dsNo"),
+    bookingId: val("bookingId"),
+    reportingAddress: val("reportingAddress"),
 
-  const [sh, sm] = st.split(':').map(Number);
-  const [eh, em] = et.split(':').map(Number);
+    startDate: val("startDate"),
+    startTime: val("startTime"),
+    startKm: val("startKm"),
 
-  let start = sh * 60 + sm;
-  let end = eh * 60 + em;
-  if(end < start) end += 1440;
+    closeDate: val("closeDate"),
+    closeTime: val("closeTime"),
+    closeKm: val("closeKm"),
 
-  const diff = end - start;
-  totalHrs.value = `${Math.floor(diff / 60)}h ${diff % 60}m`;
+    reportingTime: val("reportingTime"),
+    carBooked: val("carBooked"),
+    carAllotted: val("carAllotted"),
+
+    chauffeurName: val("chauffeurName"),
+    mobileNo: val("mobileNo"),
+    carNo: val("carNo"),
+
+    totalDays: val("totalDays"),
+    totalHrs: val("totalHrs"),
+    totalKm: val("totalKm"),
+
+    routing: val("routing"),
+    parking: val("parking")
+  };
+  fetch(WEB_APP_URL,{
+    method:"POST",
+    mode: "no-cors",
+  headers: {
+    "Content-Type": "application/json"
+  },
+    body:JSON.stringify(data)
+  })
+  .then(()=>alert("Trip Sheet Saved Successfully ✅"))
+   .catch(err=>{
+    console.error(err);
+    alert("Save Failed ❌");
+  });
 }
 
-function submitForm(){
-  const body = `Trip Sheet Details\n\n`
-  + `Service City: ${serviceCity.value}\n`
-  + `Organisation: ${organisation.value}\n`
-  + `Customer: ${customer.value}\n`
-  + `DS No: ${dsno.value}\n`
-  + `Reporting Address: ${reportAddress.value}\n\n`
-  + `Start Date: ${startDate.value}  Time: ${startTime.value}\n`
-  + `Close Date: ${closeDate.value}  Time: ${closeTime.value}\n`
-  + `Start KM: ${startKm.value}  Close KM: ${closeKm.value}\n`
-  + `Total KM: ${totalKm.value}\n`
-  + `Total Hrs: ${totalHrs.value}\n\n`
-  + `Driver: ${driver.value}\n`
-  + `Driver Mobile: ${driverMobile.value}\n`
-  + `Car No: ${carNo.value}`;
+/* DRAW SIGNATURE (MOUSE + TOUCH) */
+function initSign(id){
+  const canvas=document.getElementById(id);
+  const ctx=canvas.getContext("2d");
+   /* FIX CANVAS SCALE */
+  canvas.width  = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
 
-  const mailto = `mailto:vidhyarajaraman1@gmail.com?subject=Trip Sheet Submission&body=${encodeURIComponent(body)}`;
-  window.location.href = mailto;
+  let drawing = false;
+
+  function getPos(e){
+    const r = canvas.getBoundingClientRect();
+    const t = e.touches ? e.touches[0] : e;
+    return { x: t.clientX - r.left, y: t.clientY - r.top };
+  }
+
+  function start(e){
+    drawing = true;
+    const p = getPos(e);
+    ctx.beginPath();
+    ctx.moveTo(p.x, p.y);
+  }
+
+  function draw(e){
+    if(!drawing) return;
+    const p = getPos(e);
+    ctx.lineWidth = 2;
+    ctx.lineCap = "round";
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+  }
+
+  function stop(){ drawing = false; }
+  canvas.addEventListener("mousedown",start);
+  canvas.addEventListener("mousemove",draw);
+  canvas.addEventListener("mouseup",stop);
+  canvas.addEventListener("mouseleave",stop);
+
+  canvas.addEventListener("touchstart",start);
+  canvas.addEventListener("touchmove",e=>{e.preventDefault();draw(e);});
+  canvas.addEventListener("touchend",stop);
 }
 
-function printSheet(){
-  window.print();
+initSign("guestSign");
+initSign("driverSign");
+
+function clearCanvas(id){
+  const c=document.getElementById(id);
+  c.getContext("2d").clearRect(0,0,c.width,c.height);
 }
 </script>
 
 </body>
 </html>
+
